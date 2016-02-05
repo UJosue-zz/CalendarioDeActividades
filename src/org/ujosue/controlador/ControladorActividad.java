@@ -39,7 +39,7 @@ public class ControladorActividad {
         }
     }
     
-    public void listar(String nick, String pass){
+    public void listar(String nick){
         int id = ControladorUsuario.getInstancia().getId(nick);
         ResultSet rs = Conexion.getInstancia().obtenerConsulta("SELECT * FROM actividad WHERE idUsuario = " + id);
         System.out.println("ID		Actividad		Nota		Fecha");
@@ -51,8 +51,10 @@ public class ControladorActividad {
             Logger.getLogger(ControladorActividad.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Error en ControladorActividad.java método listar");
         }
-        System.out.println("Presione cualquier tecla para continuar");
-        Lector.getInstancia().getTexto();
-        Dashboard.getInstancia().dashboard(nick, pass);
+    }
+    
+    public boolean eliminar(String id){
+        Conexion.getInstancia().ejecutarConsulta("DELETE FROM actividad WHERE idActividad = " + id);
+        return true;
     }
 }

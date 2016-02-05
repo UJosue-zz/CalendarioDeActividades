@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.ujosue.controlador.ControladorActividad;
 import org.ujosue.controlador.ControladorUsuario;
 import org.ujosue.core.Cls;
+import org.ujosue.core.ComprobarNumero;
 import org.ujosue.core.ComprobarOpcion;
 import org.ujosue.core.Lector;
 
@@ -38,6 +39,8 @@ public class Dashboard {
             ver(nick, pass);
         }else if(actividad.equals("2")){
             agregar(nick,pass);
+        }else if(actividad.equals("3")){
+            eliminar(nick,pass);
         }else{
             System.out.println("Ingrese una opcion correcta");
             System.out.println("Presione enter para continuar");
@@ -74,6 +77,32 @@ public class Dashboard {
     }
     
     public void ver(String nick, String pass){
-        ControladorActividad.getInstancia().listar(nick, pass);
+        ControladorActividad.getInstancia().listar(nick);
+        System.out.println("Presione cualquier tecla para continuar");
+        Lector.getInstancia().getTexto();
+        Dashboard.getInstancia().dashboard(nick, pass);
+    }
+    
+    public void eliminar(String nick, String pass){
+        ControladorActividad.getInstancia().listar(nick);
+        System.out.println("Escriba el ID de la actividad que desea eliminar");
+        System.out.print(">");
+        String id = Lector.getInstancia().getTexto();
+        if(ComprobarNumero.getInstancia().esNumero(id)== true){
+            if(ControladorActividad.getInstancia().eliminar(id)==true){
+                System.out.println("Eliminado. Presione cualquier tecla para continuar");
+                Lector.getInstancia().getTexto();
+                dashboard(nick, pass);
+            }
+        }else{
+            System.out.println("El id es incorrecto");
+            System.out.println("Presione 1 para volver al menu y cualquier otra tecla para volver a eliminar");
+            System.out.print(">");
+            if(ComprobarOpcion.getInstancia().comprobar(Lector.getInstancia().getTexto())==1){
+                dashboard(nick, pass);
+            }else{
+                eliminar(nick, pass);
+            }
+        }
     }
 }
