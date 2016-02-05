@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.josue.db.Conexion;
+import org.ujosue.bean.Actividad;
 import org.ujosue.content.Dashboard;
 import org.ujosue.core.ComprobarFecha;
 import org.ujosue.core.Lector;
@@ -56,5 +57,42 @@ public class ControladorActividad {
     public boolean eliminar(String id){
         Conexion.getInstancia().ejecutarConsulta("DELETE FROM actividad WHERE idActividad = " + id);
         return true;
+    }
+    
+    public Actividad getEditar(String id){
+        Actividad actividad = new Actividad();
+        ResultSet rs = Conexion.getInstancia().obtenerConsulta("SELECT * FROM actividad WHERE idActividad = " + id);
+        try {
+            while(rs.next()){
+                actividad.setIdActividad(rs.getInt("idActividad"));
+                actividad.setIdUsuario(rs.getInt("idUsuario"));
+                actividad.setNombre(rs.getString("nombre"));
+                actividad.setNota(rs.getString("nota"));
+                actividad.setFecha(rs.getString("fecha"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorActividad.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error en ControladorActividad.java método getEditar");
+        }
+        return actividad;
+    }
+    
+    public boolean editar(Actividad act){
+        Conexion.getInstancia().ejecutarConsulta("UPDATE actividad SET nombre = '"+act.getNombre()+"', nota = '"+act.getNota()+"', fecha = '"+act.getFecha() +
+                "' WHERE idActividad = " + act.getIdActividad());
+        return true;
+    }
+    
+    public Actividad comprobarCambios(Actividad act, String nombre, String nota, String fecha){
+        if(!act.getNombre().equals(nombre)){
+            act.setNombre(nombre);
+        }
+        if(!act.getNota().equals(nota)){
+            act.setNota(nota);
+        }
+        if(!act.getFecha().equals(fecha)){
+            act.setNombre(fecha);
+        }
+        return act;
     }
 }

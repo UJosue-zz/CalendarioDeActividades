@@ -8,9 +8,11 @@ package org.ujosue.content;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.ujosue.bean.Actividad;
 import org.ujosue.controlador.ControladorActividad;
 import org.ujosue.controlador.ControladorUsuario;
 import org.ujosue.core.Cls;
+import org.ujosue.core.ComprobarFecha;
 import org.ujosue.core.ComprobarNumero;
 import org.ujosue.core.ComprobarOpcion;
 import org.ujosue.core.Lector;
@@ -32,6 +34,8 @@ public class Dashboard {
         System.out.println("[1] Ver Actividades");
         System.out.println("[2] Agregar Actividades");
         System.out.println("[3] Eliminar Actividades");
+        System.out.println("[4] Editar Actividades");
+        System.out.println("[5] Salir");
         System.out.print(">");
         String actividad = Lector.getInstancia().getTexto();
         System.out.println("actividad : " + actividad);
@@ -41,6 +45,10 @@ public class Dashboard {
             agregar(nick,pass);
         }else if(actividad.equals("3")){
             eliminar(nick,pass);
+        }else if(actividad.equals("4")){
+            editar(nick,pass);
+        }else if(actividad.equals("5")){
+            salir(nick,pass);
         }else{
             System.out.println("Ingrese una opcion correcta");
             System.out.println("Presione enter para continuar");
@@ -105,4 +113,47 @@ public class Dashboard {
             }
         }
     }
-}
+    
+    public void editar(String nick, String pass){
+        ControladorActividad.getInstancia().listar(nick);
+        System.out.println("Escriba el ID de la actividad que desea editar");
+        System.out.print(">");
+        String id = Lector.getInstancia().getTexto();
+        if(ComprobarNumero.getInstancia().esNumero(id)==true){
+         Actividad act =  ControladorActividad.getInstancia().getEditar(id);
+            System.out.println("Presione enter si no quiere modificar el dato o escriba el nuevo dato");
+            System.out.println("Nombre Actual " + act.getNombre());
+            System.out.print(">");
+            String nombre = Lector.getInstancia().getTexto();
+            System.out.println("Nota Actual " + act.getNota());
+            System.out.print(">");
+            String nota = Lector.getInstancia().getTexto();
+            String fecha = act.getFecha();
+                System.out.println("Fecha Actual " + act.getFecha());
+                System.out.print(">");
+                 fecha = Lector.getInstancia().getTexto();
+                 act = ControladorActividad.getInstancia().comprobarCambios(act, nombre, nota, fecha);
+            if(ControladorActividad.getInstancia().editar(act)==true){
+                System.out.println("Editado correctamente presione cualquier tecla para continuar");
+                Lector.getInstancia().getTexto();
+                dashboard(nick,pass);
+            }else{
+                System.out.println("Error al editar presione 1 para volver al menu o caulquier tecla para volver a editar");
+                System.out.print(">");
+            if(ComprobarOpcion.getInstancia().comprobar(Lector.getInstancia().getTexto())==1){
+                dashboard(nick, pass);
+            }else{
+                editar(nick, pass);
+            }
+            }
+        }
+            }
+            
+        public void salir(String nick, String pass){
+            nick = null;
+            pass = null;
+            System.gc();
+            Inicio.getInstancia().iniciar();
+        }
+    }
+

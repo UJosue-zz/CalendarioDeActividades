@@ -23,8 +23,24 @@ public class ControladorUsuario {
 		return(instancia==null)? new ControladorUsuario():instancia;
 	}        
         
-        public void registrar(String nombre, String nick, String pass){
-            Conexion.getInstancia().ejecutarConsulta("INSERT INTO usuario (`nombre`, `nick`, `contraseña`) VALUES ('"+nombre+"', '"+nick+"', '"+pass+"')");
+        public boolean registrar(String nombre, String nick, String pass){
+            ResultSet rs = Conexion.getInstancia().obtenerConsulta("Select * from usuario");
+            boolean existe = false;
+        try {
+            while(rs.next()){
+                if(rs.getString("nick").equals(nick)){
+                    existe = true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            if(existe == false){
+                Conexion.getInstancia().ejecutarConsulta("INSERT INTO usuario (`nombre`, `nick`, `contraseña`) VALUES ('"+nombre+"', '"+nick+"', '"+pass+"')");
+            } else {
+                System.out.println("El usuario ya existe");
+            }
+            return existe;
         }
         
         public boolean ingresar(String nick, String pass){

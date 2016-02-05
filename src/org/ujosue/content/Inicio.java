@@ -85,8 +85,9 @@ public class Inicio {
         String contraseñaOne = Encriptar.getMD5(Lector.getInstancia().getTexto());
         System.out.println("Vuelva a escribir su contraseña");
         String contraseñaTwo = Encriptar.getMD5(Lector.getInstancia().getTexto());
+        boolean registrado = true;
         if(contraseñaOne.equals(contraseñaTwo)){
-            ControladorUsuario.getInstancia().registrar(nombre, nick, contraseñaOne);
+            registrado = ControladorUsuario.getInstancia().registrar(nombre, nick, contraseñaOne);
         }else{
             System.out.println("Las contraseñas no coinciden");
             System.out.println("Presione 1 para volver al menu y cualquier otra tecla para volver a registrarse");
@@ -97,8 +98,14 @@ public class Inicio {
                 registrar();
             }
         }
+        if(registrado == false){
         System.out.println("Registrado exitosamente");
         System.out.println("");
         Dashboard.getInstancia().dashboard(nick, contraseñaOne);
+        } else {
+            System.out.println("Presione cualquier tecla para continuar");
+            Lector.getInstancia().getTexto();
+            iniciar();
+        }
     }
 }
