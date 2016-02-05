@@ -44,7 +44,7 @@ public class ControladorUsuario {
             return encontrado;
         }
         
-        public int getId(String nombre, String pass){
+        public int getId(String nombre){
             int id = 0;
             ResultSet rs = Conexion.getInstancia().obtenerConsulta("Select * from usuario");
         try {

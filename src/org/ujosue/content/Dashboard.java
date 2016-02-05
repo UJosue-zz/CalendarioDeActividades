@@ -31,10 +31,11 @@ public class Dashboard {
         System.out.println("[1] Ver Actividades");
         System.out.println("[2] Agregar Actividades");
         System.out.println("[3] Eliminar Actividades");
+        System.out.print(">");
         String actividad = Lector.getInstancia().getTexto();
         System.out.println("actividad : " + actividad);
         if(actividad.equals("1")){
-            
+            ver(nick, pass);
         }else if(actividad.equals("2")){
             agregar(nick,pass);
         }else{
@@ -73,6 +74,6 @@ public class Dashboard {
     }
     
     public void ver(String nick, String pass){
-        
+        ControladorActividad.getInstancia().listar(nick, pass);
     }
 }

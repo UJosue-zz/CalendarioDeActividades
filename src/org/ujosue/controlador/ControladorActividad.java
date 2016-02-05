@@ -5,7 +5,12 @@
  */
 package org.ujosue.controlador;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.josue.db.Conexion;
+import org.ujosue.content.Dashboard;
 import org.ujosue.core.ComprobarFecha;
 import org.ujosue.core.Lector;
 
@@ -22,7 +27,7 @@ public class ControladorActividad {
     
     public boolean agregar(String nick,String pass, String nombre, String nota, String fecha){
         if(ComprobarFecha.getInstancia().comprobar(fecha)==true){
-            int id = ControladorUsuario.getInstancia().getId(nick, pass);
+            int id = ControladorUsuario.getInstancia().getId(nick);
             System.out.println("INSERT INTO actividad (`idUsuario`, `nombre`, `nota`, `fecha`) VALUES ("+id+", '"+nombre+"', '"+nota+"', '"+fecha+"')");
             Conexion.getInstancia().ejecutarConsulta("INSERT INTO actividad (`idUsuario`, `nombre`, `nota`, `fecha`) VALUES ("+id+", '"+nombre+"', '"+nota+"', '"+fecha+"')");
             return true;
@@ -34,7 +39,20 @@ public class ControladorActividad {
         }
     }
     
-    public void listar(String nick){
-        //id = 
+    public void listar(String nick, String pass){
+        int id = ControladorUsuario.getInstancia().getId(nick);
+        ResultSet rs = Conexion.getInstancia().obtenerConsulta("SELECT * FROM actividad WHERE idUsuario = " + id);
+        System.out.println("ID		Actividad		Nota		Fecha");
+        try {
+            while(rs.next()){
+                System.out.println(rs.getInt("idActividad") + "		" + rs.getString("nombre") + "		" + rs.getString("nota") + "		" + rs.getInt("fecha"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorActividad.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error en ControladorActividad.java método listar");
+        }
+        System.out.println("Presione cualquier tecla para continuar");
+        Lector.getInstancia().getTexto();
+        Dashboard.getInstancia().dashboard(nick, pass);
     }
 }
