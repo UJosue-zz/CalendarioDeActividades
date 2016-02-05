@@ -15,7 +15,7 @@ public class Conexion {
 		return(instancia==null)? new Conexion():instancia;
 	}
 	
-	public void EjecutarConsulta(String consulta){
+	public void ejecutarConsulta(String consulta){
 		try{
 			stm.execute(consulta);
 		} catch(SQLException e){
